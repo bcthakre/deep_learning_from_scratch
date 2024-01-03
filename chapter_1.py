@@ -65,3 +65,33 @@ plt.title('Polynomial Function and Its Derivative')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+from typing import Callable
+import numpy as np
+
+def deriv(func: Callable[[np.ndarray],np.ndarray],
+                             input_: ndarray,
+                             delta : float = 0.001) -> ndarray:
+    """
+    Derive the derivattive of function func at every point on the ndarray
+    
+    """
+
+    return func(input_ + delta ) - func(input_ - delta) / (2 * delta)
+
+
+x_values = np.linspace(0,2 * np.pi , 100)
+
+numeircal_derivative = deriv(np.sin,x_values)
+
+actual_derivattive = np.cos(x_values)
+
+plt.figure(figsize=(12,6))
+plt.plot(x_values, numerical_derivative, label='Numerical Derivative of sin(x)')
+plt.plot(x_values, actual_derivative, label='Actual Derivative of sin(x) (cos(x))', linestyle='--')
+plt.xlabel('x')
+plt.ylabel('Derivative')
+plt.title('Comparison of Numerical and Actual Derivatives')
+plt.legend()
+plt.grid(True)
+plt.show()
