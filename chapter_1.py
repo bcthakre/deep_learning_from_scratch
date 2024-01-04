@@ -87,11 +87,64 @@ numeircal_derivative = deriv(np.sin,x_values)
 actual_derivattive = np.cos(x_values)
 
 plt.figure(figsize=(12,6))
-plt.plot(x_values, numerical_derivative, label='Numerical Derivative of sin(x)')
-plt.plot(x_values, actual_derivative, label='Actual Derivative of sin(x) (cos(x))', linestyle='--')
+plt.plot(x_values, numeircal_derivative, label='Numerical Derivative of sin(x)')
+plt.plot(x_values, actual_derivattive, label='Actual Derivative of sin(x) (cos(x))', linestyle='--')
 plt.xlabel('x')
 plt.ylabel('Derivative')
 plt.title('Comparison of Numerical and Actual Derivatives')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+from typing import Callable
+import numpy as np
+import matplotlib.pyplot as plt
+
+def deriv(func: Callable[[np.ndarray],np.ndarray],
+          input_: ndarray,
+          delta : float = 0.001) -> np.ndarray:
+    """
+    Evaluates the derivative of function "func" at every element in the "input" array
+    """
+
+    return (func(input_ + delta) - func(input_ - delta)) / (2 * delta)
+
+def second_deriv(func: Callable[[np.ndarray],np.ndarray],
+                 input_ : np.ndarray,
+                 delta : float = 0.001) -> np.ndarray:
+      """
+      Evaluates the second derivative
+      """
+
+      first_derivative = deriv(func, input_, delta)
+
+      return deriv(lambda x: deriv(func,x,delta), input_, delta)
+
+
+def polynomial_function(x: np.ndarray) -> np.ndarray:
+    return 2 * x ** 3 + 3 * x ** 2 + 5 * x 
+
+x_value = np.linspace(-2,2,100)
+
+first_derivative_value = deriv(polynomial_function,x_value)
+
+second_derivative_value = second_deriv(polynomial_function,x_value)
+
+print(x_value)
+print(first_derivative_value)
+print(second_derivative_value)
+
+derivative_tuples = list(zip(x_value,first_derivative_value,second_derivative_value))
+print(derivative_tuples)
+
+# Plotting the original function, first derivative, and second derivative
+plt.figure(figsize=(12, 8))
+plt.plot(x_values, x_value, label='Original Polynomial Function')
+plt.plot(x_values, first_derivative_value, label='First Derivative', linestyle='--')
+plt.plot(x_values, second_derivative_value, label='Second Derivative', linestyle='-.')
+plt.xlabel('x')
+plt.ylabel('Value')
+plt.title('Polynomial Function and its Derivatives')
 plt.legend()
 plt.grid(True)
 plt.show()
