@@ -66,7 +66,7 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-from typing import Callable
+from typing import Callable, List
 import numpy as np
 
 def deriv(func: Callable[[np.ndarray],np.ndarray],
@@ -148,3 +148,169 @@ plt.title('Polynomial Function and its Derivatives')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+# one more function
+
+# Define a function that works over the given domain, for example, a cubic function
+def cubic_function(x: np.ndarray) -> np.ndarray:
+    return x**3
+
+# Generate a range of x values that do not include the domain where the original function is not defined
+x_values = np.linspace(0, 4, 100)
+
+# Calculate the original function values, first and second derivatives for the cubic function
+original_values = cubic_function(x_values)
+first_derivative_values = deriv(cubic_function, x_values)
+second_derivative_values = second_deriv(cubic_function, x_values)
+
+# Print statements
+print(x_values)
+print(first_derivative_values)
+print(second_derivative_values)
+
+derivative_tuples = list(zip(x_values, original_values, first_derivative_values, second_derivative_values))
+print(derivative_tuples)
+
+# Plotting the original function, first derivative, and second derivative
+plt.figure(figsize=(12, 8))
+plt.plot(x_values, original_values, label='Original Function')
+plt.plot(x_values, first_derivative_values, label='First Derivative', linestyle='--')
+plt.plot(x_values, second_derivative_values, label='Second Derivative', linestyle='-.')
+plt.xlabel('x')
+plt.ylabel('Value')
+plt.title('Function and its Derivatives')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# Define a function that works over the given domain, for example, a cubic function
+def sqrt_function(x: np.ndarray) -> np.ndarray:
+    return x**2
+
+# Generate a range of x values that do not include the domain where the original function is not defined
+x_values = np.linspace(0, 100, 1000)
+
+# Calculate the original function values, first and second derivatives for the cubic function
+original_values = sqrt_function(x_values)
+first_derivative_values = deriv(sqrt_function, x_values)
+second_derivative_values = second_deriv(sqrt_function, x_values)
+
+# Print statements
+print(x_values)
+print(first_derivative_values)
+print(second_derivative_values)
+
+derivative_tuples = list(zip(x_values, original_values, first_derivative_values, second_derivative_values))
+print(derivative_tuples)
+
+# Plotting the original function, first derivative, and second derivative
+plt.figure(figsize=(12, 8))
+plt.plot(x_values, original_values, label='Original Function')
+plt.plot(x_values, first_derivative_values, label='First Derivative', linestyle='--')
+plt.plot(x_values, second_derivative_values, label='Second Derivative', linestyle='-.')
+plt.xlabel('x')
+plt.ylabel('Value')
+plt.title('Function and its Derivatives')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+# Chain rule implemtation and graphics
+
+
+from typing import Callable, List
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def plot_chain(chain: list, input_range: np.ndarray) -> None:
+    """
+    Plot the composite function f2(f1(x)) for a given input range.
+    """
+    f1, f2 = chain
+    composite_function = f2(f1(input_range))
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(input_range, composite_function, label='Composite Function: $f_2(f_1(x))$')
+    plt.xlabel('x')
+    plt.ylabel('f2(f1(x))')
+    plt.title('Composite Function Plot')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_chain_deriv(chain: list, input_range: np.ndarray) -> None:
+    """
+    Plot the derivative of the composite function f2(f1(x)) for a given input range.
+    """
+    derivative = chain_derivative(chain, input_range)
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(input_range, derivative, label='Derivative of Composite Function', color='orange')
+    plt.xlabel('x')
+    plt.ylabel("Derivative of $f_2(f_1(x))$")
+    plt.title('Composite Function Derivative Plot')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def sigmoid(x: np.ndarray) -> np.ndarray:
+    """
+    Apply the sigmoid function to each element in the input noarray
+    """
+    return 1 / (1 + np.exp(-x))
+
+def square(x: np.ndarray) -> np.ndarray:
+    """
+    Square each element in the input ndarray
+    """
+    return np.power(x,2)
+
+
+def chain_derivative(chain: List[Callable[[np.ndarray], np.ndarray]], 
+                     input_range: np.ndarray) -> np.ndarray:
+    """
+    Uses the chain rule to coompute the derivative of two nested functions
+    (f2(f1(x))' = f2'(f1(x)) * f1'(x))
+    
+    """
+
+    assert len(chain) == 2, \
+    "This function requires 'Chain' objects of length 2"
+
+    assert input_range.ndim == 1, \
+    "function requires a 1 dimensional ndarray as input range"
+
+    f1 = chain[0]
+    f2 = chain[1]
+
+    # df1/dx
+
+    f1_of_x = deriv(f1,input_range)
+
+    # df1/du
+    df1dx = deriv(f2,f1(input_range))
+
+    # df2/du(f1(x))
+
+    df2du = deriv(f2,f1(input_range))
+
+    # multiplying these quantities together ar each point
+
+    return df1dx * df2du
+
+
+# Example usage
+
+PLOT_RANGE = np.arange(-3, 3, 0.01)
+chain_1 = [square, sigmoid]
+chain_2 = [sigmoid, square]
+
+plot_chain(chain_1, PLOT_RANGE) 
+plot_chain_deriv(chain_1, PLOT_RANGE)
+
+plot_chain(chain_2, PLOT_RANGE)
+plot_chain_deriv(chain_2, PLOT_RANGE)
