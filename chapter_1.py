@@ -314,3 +314,125 @@ plot_chain_deriv(chain_1, PLOT_RANGE)
 
 plot_chain(chain_2, PLOT_RANGE)
 plot_chain_deriv(chain_2, PLOT_RANGE)
+
+# one more example 
+
+def f1(x : np.ndarray) -> np.ndarray:
+    """
+    Quadratic function
+    :params: x : array of values
+    :return: ndarray
+    """
+    return x ** 2
+
+def df1(x: np.ndarray) -> np.ndarray:
+
+    """
+    Derivative of the qudratic function
+    :params: x: array of values
+    :return: ndarray
+    """
+    return 2 * x
+
+def f2(x: np.ndarray) -> np.ndarray:
+    """
+    Sin Function
+    :params: x : array of values
+    return: ndarray
+    """
+    return np.sin(x)
+
+def df2(x: np.ndarray) -> np.ndarray:
+    """
+    derivative of sin function
+    :params: x: array of values
+    :return: ndarray
+    """
+    return np.cos(x)
+
+def f3(x: np.ndarray) -> np.ndarray:
+    """
+    Exponential functions
+    :params: x: array of values
+    :return: ndarray
+    """
+    return np.exp(x)
+
+def df3(x: np.ndarray) -> np.ndarray:
+    """
+    Derivative of exponential function
+    :params: x: array of values
+    :return: ndarray
+    """
+    return np.exp(x)
+
+def compostie_function(x: np.ndarray) -> np.ndarray:
+    """
+    Compostie function
+    :params: x: array of values
+    :return: ndarray
+    """
+    return f3(f2(f1(x)))
+
+def compostive_derivative(x: np.ndarray) -> np.ndarray:
+    """
+    Derivative of compostie function
+    :params: x: array of values
+    :return: ndarray
+    """
+    return df3(f2(f1(x))) * df2(f1(x)) * df1(x)
+
+# Generate x values
+x_values = np.linspace(-2, 2, 1000)
+
+# Calculate values for the composite function and its derivative
+composite_values = compostie_function(x_values)
+derivative_values = compostive_derivative(x_values)
+
+
+# Combining the plots of the individual functions and their derivatives with the composite function and its derivative
+plt.figure(figsize=(14, 18))
+
+# Plot for f1 and its derivative
+plt.subplot(4, 1, 1)
+plt.plot(x_values, f1(x_values), label='$f_1(x) = x^2$', color='blue')
+plt.plot(x_values, df1(x_values), label="$f_1'(x) = 2x$", linestyle='--', color='green')
+plt.xlabel('x')
+plt.ylabel('f1 and df1')
+plt.title('Function $f_1(x) = x^2$ and its Derivative')
+plt.legend()
+plt.grid(True)
+
+# Plot for f2 and its derivative
+plt.subplot(4, 1, 2)
+plt.plot(x_values, f2(x_values), label='$f_2(x) = sin(x)$', color='blue')
+plt.plot(x_values, df2(x_values), label="$f_2'(x) = cos(x)$", linestyle='--', color='green')
+plt.xlabel('x')
+plt.ylabel('f2 and df2')
+plt.title('Function $f_2(x) = sin(x)$ and its Derivative')
+plt.legend()
+plt.grid(True)
+
+# Plot for f3 and its derivative
+plt.subplot(4, 1, 3)
+plt.plot(x_values, f3(x_values), label='$f_3(x) = e^x$', color='blue')
+plt.plot(x_values, df3(x_values), label="$f_3'(x) = e^x$", linestyle='--', color='green')
+plt.xlabel('x')
+plt.ylabel('f3 and df3')
+plt.title('Function $f_3(x) = e^x$ and its Derivative')
+plt.legend()
+plt.grid(True)
+
+# Plot for the composite function and its derivative
+plt.subplot(4, 1, 4)
+plt.plot(x_values, composite_values, label='Composite Function $e^{sin(x^2)}$', color='blue')
+plt.plot(x_values, derivative_values, label="Composite Function's Derivative", linestyle='--', color='green')
+plt.xlabel('x')
+plt.ylabel('Composite Function and Derivative')
+plt.title('Composite Function $e^{sin(x^2)}$ and Its Derivative')
+plt.legend()
+plt.grid(True)
+
+# Show the plots
+plt.tight_layout()
+plt.show()
